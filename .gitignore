@@ -1,0 +1,17 @@
+# Backend
+Backend/chatapp/target/
+
+# Frontend
+Frontend/node_modules/
+Frontend/dist/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
