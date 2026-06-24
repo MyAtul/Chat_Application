@@ -40,7 +40,7 @@ public class MessageService {
         return messageRepo.findChatHistory(currentUser.getId(), receiverId);
     }
 
-    public void saveWebSocketMessage(ChatMessage chatMessage,String username) {
+    public Message saveWebSocketMessage(ChatMessage chatMessage, String username) {
 
         User sender = userRepo.findByUsername(username).orElseThrow();
 
@@ -52,5 +52,6 @@ public class MessageService {
         message.setTimestamp(LocalDateTime.now());
 
         messageRepo.save(message);
+        return message;
     }
 }

@@ -6,6 +6,7 @@ import MessageList from '../components/MessageList'
 import MessageInput from '../components/MessageInput'
 import { getAllUsers } from '../services/userService'
 import { getChatHistory } from '../services/messageService'
+import { connectSocket } from '../websockets/socket'
 
 const Chat = () => {
 
@@ -42,6 +43,15 @@ const Chat = () => {
     }
   }
 
+  const handleIncomingMessage =(message)=>{
+    
+    setMessages(prev=>[...prev,message])
+    
+  }
+
+  useEffect(()=>{
+    connectSocket(handleIncomingMessage)
+  },[])
 
   useEffect(()=>{
 

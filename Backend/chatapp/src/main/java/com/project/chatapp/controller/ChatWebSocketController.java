@@ -1,6 +1,7 @@
 package com.project.chatapp.controller;
 
 import com.project.chatapp.dto.ChatMessage;
+import com.project.chatapp.entity.Message;
 import com.project.chatapp.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,18 +19,36 @@ public class ChatWebSocketController {
     private SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/sendMessage")
-    public void sendMessage(ChatMessage message ,
-                            org.springframework.messaging.Message<?> msg){
+    public void sendMessage(
+            ChatMessage message,
+            org.springframework.messaging.Message<?> msg
+    ){
 
-        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(msg);
+        StompHeaderAccessor accessor =
+                StompHeaderAccessor.wrap(msg);
 
-        String username = (String) accessor
-                .getSessionAttributes().get("username");
+        String username =
+                (String) accessor
+                        .getSessionAttributes()
+                        .get("username");
 
-        messageService.saveWebSocketMessage(message,username);
+        Message savedMessage =
+                messageService
+                        .saveWebSocketMessage(
+                                message,
+                                username
+                        );
 
         messagingTemplate.convertAndSend(
-                "/topic/user" + message.getReceiverId(),
-                message);
+                "/topic/user" +
+                        savedMessage.getReceiverId(),
+                savedMessage
+        );
+
+        messagingTemplate.convertAndSend(
+                "/topic/user" +
+                        savedMessage.getSenderId(),
+                savedMessage
+        );
     }
 }

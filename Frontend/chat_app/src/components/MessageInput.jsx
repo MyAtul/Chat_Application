@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { sendMessage } from '../services/messageService'
+import { sendSocketMessage } from '../websockets/socket'
 
 const MessageInput = ({selectedUser,fetchMessages}) => {
 
@@ -13,12 +14,9 @@ const MessageInput = ({selectedUser,fetchMessages}) => {
 
     try{
 
-      await sendMessage(selectedUser.id,content)
+      await sendSocketMessage(selectedUser.id,content)
 
       setContent('')
-
-      await fetchMessages(selectedUser.id)
-
 
     }catch(error){
 
