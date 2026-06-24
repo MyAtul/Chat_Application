@@ -1,0 +1,20 @@
+import axios from "axios";
+
+const API_URL = "http://localhost:8080"
+
+export const getChatHistory = async (receiverId)=>{
+
+    const token = localStorage.getItem("token")
+
+    const response = await axios.get(
+        `${API_URL}/messages/${receiverId}`,
+        {
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
+        }
+    )
+
+    return response.data
+
+}

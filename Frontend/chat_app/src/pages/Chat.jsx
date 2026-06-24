@@ -1,22 +1,87 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Sidebar from '../components/Sidebar'
 import ChatHeader from '../components/ChatHeader'
 import MessageBubble from '../components/MessageBubble'
 import MessageList from '../components/MessageList'
 import MessageInput from '../components/MessageInput'
+import { getAllUsers } from '../services/userService'
+import { getChatHistory } from '../services/messageService'
 
 const Chat = () => {
+
+  const [users, setUsers] = useState([])
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [messages, setMessages] = useState([])
+
+  const fetchUser = async ()=>{
+
+    try{
+
+      const data = await getAllUsers()
+
+      setUsers(data)
+
+    }catch(error){
+      console.log(error)
+    }
+    
+  }
+
+
+  const fecthMessage =async (receiverId)=>{
+
+    try{
+
+      const message = await getChatHistory(receiverId)
+      setMessages(message)
+
+    }catch(error){
+
+      console.log(error)
+
+    }
+  }
+
+
+  useEffect(()=>{
+
+    if(!selectedUser) return
+
+    fecthMessage(selectedUser.id)
+
+  },[selectedUser])
+
+  useEffect(()=>{
+
+    fetchUser()
+
+  },[])
+
+  const currentUserId = Number(localStorage.getItem("userId"))
+  const currentuser = localStorage.getItem("username")
+
+  const filterUsers = users.filter(
+    user=>user.username !== currentuser
+  )
+
   return (
     <div className='h-screen bg-linear-to-br
         from-slate-950
         via-slate-900
         to-slate-950 text-white flex'>
 
-      <Sidebar/>
+      <Sidebar
+      users={filterUsers}
+      selectedUser={selectedUser}
+      setSelectedUser={setSelectedUser}
+      />
       <div className='flex-1 flex flex-col'>
         <ChatHeader/>
   
-        <MessageList />
+        <MessageList 
+        messages={messages}
+        currentUserId={currentUserId}
+        />
 
         <MessageInput/>
 

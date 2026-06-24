@@ -1,6 +1,7 @@
 package com.project.chatapp.service;
 
 import com.project.chatapp.dto.LoginRequest;
+import com.project.chatapp.dto.LoginResponse;
 import com.project.chatapp.dto.RegisterRequest;
 import com.project.chatapp.entity.User;
 import com.project.chatapp.repo.UserRepo;
@@ -36,18 +37,19 @@ public class AuthService {
          return "User Register";
     }
 
-    public String login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
 
         User user = userRepo.findByUsername(request.getUsername()).orElse(null);
 
         if(user == null){
-            return "User not found";
+            throw new RuntimeException("User not found");
         }
 
-        if(passwordEncoder.matches(
+        if(!passwordEncoder.matches(
                 request.getPassword(),user.getPassword())){
-            return jwtService.generateToken(user.getUsername());
+                throw new RuntimeException("Invalid credential");
         }
-        return "Invalid Credential";
+        String token = jwtService.generateToken(user.getUsername());
+        return new LoginResponse(token,user.getId(),user.getUsername());
     }
 }

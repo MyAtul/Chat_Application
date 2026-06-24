@@ -1,6 +1,7 @@
 package com.project.chatapp.controller;
 
 import com.project.chatapp.dto.LoginRequest;
+import com.project.chatapp.dto.LoginResponse;
 import com.project.chatapp.dto.RegisterRequest;
 import com.project.chatapp.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request){
+    public LoginResponse login(@RequestBody LoginRequest request){
         return authService.login(request);
-    }
-
-    @GetMapping("/test")
-    public String test(){
-        return "Testing Protected";
     }
 }

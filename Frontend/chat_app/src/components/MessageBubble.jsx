@@ -2,10 +2,12 @@ import React from 'react'
 
 const MessageBubble = (
     {
-        content,
-        mine
+        message,
+        currentUserId
     }
 ) => {
+
+  const mine = message.senderId === currentUserId
   return (
     <div
       className={`
@@ -14,14 +16,15 @@ const MessageBubble = (
         py-3
         rounded-2xl
         mb-4
+
         ${
           mine
-            ? "bg-blue-600 ml-auto"
-            : "bg-slate-800"
+          ?"bg-blue-600 ml-auto"
+          :"bg-slate-800"
         }
       `}
     >
-      {content}
+      {message.content}
     </div>
   )
 }

@@ -13,10 +13,11 @@ const Login = () => {
         e.preventDefault()
 
         try{
-            const token = await loginUser({username,password})
-            console.log(token)
+            const response = await loginUser({username,password})
 
-            localStorage.setItem("token",token)
+            localStorage.setItem("token",response.token)
+            localStorage.setItem("userId",response.userId)
+            localStorage.setItem("username",response.username)
 
             navigate("/chat")
         }
