@@ -89,16 +89,27 @@ const Chat = () => {
         <ChatHeader
         currentuser={currentuser}
         />
-  
-        <MessageList 
-        messages={messages}
-        currentUserId={currentUserId}
-        />
 
-        <MessageInput
-        selectedUser={selectedUser}
-        fetchMessages={fetchMessages}
-        />
+        {
+          selectedUser ? (
+            <>
+              <MessageList 
+                messages={messages}
+                currentUserId={currentUserId}
+                />
+
+                <MessageInput
+                selectedUser={selectedUser}
+                fetchMessages={fetchMessages}
+              />
+            </>
+          ):(
+            <div className='flex-1 flex items-center justify-center text-slate-400'>
+              Select a user to Start conversation
+            </div>
+          )
+        }
+        
 
       </div>
     </div>

@@ -4,8 +4,9 @@ public class UserResponse {
 
     private Long id;
     private String username;
+    private String lastMessage;
 
-    public UserResponse(Long id,String username){
+    public UserResponse(Long id, String username) {
         this.id = id;
         this.username = username;
     }
@@ -24,5 +25,13 @@ public class UserResponse {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
     }
 }

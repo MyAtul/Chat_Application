@@ -1,33 +1,27 @@
 import React, { useState } from 'react'
+import { registerUser } from '../services/userService'
 import { useNavigate } from 'react-router-dom'
-import { loginUser } from '../services/authService'
 
-const Login = () => {
+const Register = () => {
 
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
     const navigate =  useNavigate()
 
-    const handleSubmit = async (e) =>{
+    const handleRegister = async (e)=>{
         e.preventDefault()
 
         try{
-            const response = await loginUser({username,password})
-
-            localStorage.setItem("token",response.token)
-            localStorage.setItem("userId",response.userId)
-            localStorage.setItem("username",response.username)
-
-            navigate("/chat")
-        }
-        catch(error){
+            await registerUser({username,password})
+            navigate("/login")
+        }catch(error){
             console.log(error)
         }
     }
 
- return (
-    <div className="min-h-screen flex items-center justify-center bg-black px-4">
+  return (
+     <div className="min-h-screen flex items-center justify-center bg-black px-4">
 
         <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-8 text-black">
 
@@ -37,12 +31,12 @@ const Login = () => {
                 </h1>
 
                 <p className="text-gray-500 mt-2">
-                Login to continue
+                Register
                 </p>
             </div>
 
             <form
-                onSubmit={handleSubmit}
+                onSubmit={handleRegister}
                 className="flex flex-col gap-4"
             >
 
@@ -70,7 +64,7 @@ const Login = () => {
                 type="submit"
                 className="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
                 >
-                Login
+                Register
                 </button>
 
             </form>
@@ -78,7 +72,7 @@ const Login = () => {
         </div>
 
     </div>
-    )
+  )
 }
 
-export default Login
+export default Register

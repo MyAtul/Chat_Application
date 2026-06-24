@@ -26,6 +26,21 @@ const MessageBubble = (
       `}
     >
       {message.content}
+      <p className='text-xs text-gray-300 mt-1 text-right'>
+        {
+          message.timestamp 
+          && new Date(
+            message.timestamp
+          ).toLocaleDateString(
+            [],
+            {
+              hour:"2-digit",
+              minute:"2-digit"
+            }
+
+          )
+        }
+      </p>
     </div>
   )
 }

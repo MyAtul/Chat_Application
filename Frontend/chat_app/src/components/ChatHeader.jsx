@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const ChatHeader = ({currentuser}) => {
 
@@ -11,7 +11,7 @@ const ChatHeader = ({currentuser}) => {
     localStorage.removeItem("userId")
     localStorage.removeItem("username")
 
-    navigate("/")
+    navigate("/login")
   }
   return (
     <div className="
@@ -40,6 +40,13 @@ const ChatHeader = ({currentuser}) => {
       className="bg-slate-800 px-4 py-2 rounded-lg hover:bg-slate-700">
         Logout
       </button>
+
+      <Link 
+      to='/register'
+      onClick={handleLogout}
+      className="bg-slate-800 px-4 py-2 rounded-lg hover:bg-slate-700">
+        Register
+      </Link>
 
     </div>
   )

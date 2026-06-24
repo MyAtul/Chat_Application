@@ -15,3 +15,7 @@ export const getAllUsers = async ()=>{
     )
     return response.data
 }
+
+export const registerUser = ({username,password}) =>{
+    return axios.post(`${API_URL}/auth/register`,{username,password})
+}
