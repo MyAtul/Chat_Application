@@ -22,6 +22,7 @@ const MessageBubble = (
           ?"bg-blue-600 ml-auto"
           :"bg-slate-800"
         }
+        
       `}
     >
       {message.content}

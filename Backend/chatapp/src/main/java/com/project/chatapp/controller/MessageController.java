@@ -24,6 +24,7 @@ public class MessageController {
     @GetMapping("/{receiverId}")
     public List<Message> getChatHistory(@PathVariable Long receiverId,
                                         Authentication authentication){
+
         return messageService.getChatHistory(receiverId,authentication.getName());
     }
 }

@@ -1,7 +1,17 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import MessageBubble from './MessageBubble'
 
 const MessageList = ({messages,currentUserId}) => {
+
+  const messagesEndRef = useRef(null);
+
+    useEffect(() => {
+
+        messagesEndRef.current?.scrollIntoView({
+            behavior: "smooth"
+        })
+
+    }, [messages])
 
   return (
     <div className='flex-1 overflow-y-auto p-6'>
@@ -14,6 +24,8 @@ const MessageList = ({messages,currentUserId}) => {
                 />
             ))
         }
+
+        <div ref={messagesEndRef}></div>
     </div>
   )
 }

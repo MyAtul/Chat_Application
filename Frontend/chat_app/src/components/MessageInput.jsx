@@ -1,6 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { sendMessage } from '../services/messageService'
 
-const MessageInput = () => {
+const MessageInput = ({selectedUser,fetchMessages}) => {
+
+  const [content, setContent] = useState('')
+
+  const handelSend =async ()=>{
+
+    if(!content.trim()) return
+
+    if(!selectedUser) return
+
+    try{
+
+      await sendMessage(selectedUser.id,content)
+
+      setContent('')
+
+      await fetchMessages(selectedUser.id)
+
+
+    }catch(error){
+
+      console.log(error)
+
+    }
+
+  }
+
   return (
     <div className="
       border-t
@@ -12,6 +39,17 @@ const MessageInput = () => {
       <div className="flex gap-3">
 
         <input
+          value={content}
+          onChange={(elem)=>{
+            setContent(elem.target.value)
+          }}
+
+          onKeyDown={(e)=>{
+            if(e.key === "Enter"){
+              handelSend()
+            }
+          }}
+
           placeholder="Type a message..."
           className="
             flex-1
@@ -24,6 +62,7 @@ const MessageInput = () => {
         />
 
         <button
+        onClick={handelSend}
           className="bg-blue-600 px-6 rounded-xl hover:bg-blue-500"
         >
           Send

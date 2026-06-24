@@ -28,7 +28,7 @@ const Chat = () => {
   }
 
 
-  const fecthMessage =async (receiverId)=>{
+  const fetchMessages =async (receiverId)=>{
 
     try{
 
@@ -47,7 +47,7 @@ const Chat = () => {
 
     if(!selectedUser) return
 
-    fecthMessage(selectedUser.id)
+    fetchMessages(selectedUser.id)
 
   },[selectedUser])
 
@@ -76,14 +76,19 @@ const Chat = () => {
       setSelectedUser={setSelectedUser}
       />
       <div className='flex-1 flex flex-col'>
-        <ChatHeader/>
+        <ChatHeader
+        currentuser={currentuser}
+        />
   
         <MessageList 
         messages={messages}
         currentUserId={currentUserId}
         />
 
-        <MessageInput/>
+        <MessageInput
+        selectedUser={selectedUser}
+        fetchMessages={fetchMessages}
+        />
 
       </div>
     </div>

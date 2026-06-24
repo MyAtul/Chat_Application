@@ -1,6 +1,18 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const ChatHeader = () => {
+const ChatHeader = ({currentuser}) => {
+
+  const navigate = useNavigate()
+
+  const handleLogout = ()=>{
+
+    localStorage.removeItem("token")
+    localStorage.removeItem("userId")
+    localStorage.removeItem("username")
+
+    navigate("/")
+  }
   return (
     <div className="
       h-20
@@ -14,8 +26,8 @@ const ChatHeader = () => {
     ">
 
       <div>
-        <h2 className="font-semibold text-xl">
-          Alex
+        <h2 className="font-semibold text-xl capitalize">
+          {currentuser}
         </h2>
 
         <p className="text-green-500 text-sm">
@@ -23,7 +35,9 @@ const ChatHeader = () => {
         </p>
       </div>
 
-      <button className="bg-slate-800 px-4 py-2 rounded-lg hover:bg-slate-700">
+      <button 
+      onClick={handleLogout}
+      className="bg-slate-800 px-4 py-2 rounded-lg hover:bg-slate-700">
         Logout
       </button>
 

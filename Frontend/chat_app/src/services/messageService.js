@@ -18,3 +18,22 @@ export const getChatHistory = async (receiverId)=>{
     return response.data
 
 }
+
+export const sendMessage =async (receiverId,content)=>{
+    
+    const token = localStorage.getItem("token")
+
+    const response = await axios.post(
+        `${API_URL}/messages/send`,{
+            receiverId,
+            content
+        },
+        {
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
+        }
+    )
+
+    return response.data
+}
