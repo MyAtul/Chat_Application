@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import Avatar from './Avatar'
 
 const ChatHeader = ({currentuser}) => {
 
@@ -26,8 +27,8 @@ const ChatHeader = ({currentuser}) => {
     ">
 
       <div>
-        <h2 className="font-semibold text-xl capitalize">
-          {currentuser}
+        <h2 className="font-semibold text-xl capitalize flex items-center gap-3">
+          <Avatar username={currentuser}/> {currentuser}
         </h2>
 
         <p className="text-green-500 text-sm">
@@ -35,18 +36,21 @@ const ChatHeader = ({currentuser}) => {
         </p>
       </div>
 
-      <button 
-      onClick={handleLogout}
-      className="bg-slate-800 px-4 py-2 rounded-lg hover:bg-slate-700">
-        Logout
-      </button>
+      <div className='flex gap-5'>
+        <button 
+        onClick={handleLogout}
+        className="bg-red-700 px-4 py-2 rounded-lg hover:bg-red-600">
+          Logout
+        </button>
 
-      <Link 
-      to='/register'
-      onClick={handleLogout}
-      className="bg-slate-800 px-4 py-2 rounded-lg hover:bg-slate-700">
-        Register
-      </Link>
+        <Link 
+        to='/register'
+        onClick={handleLogout}
+        className="bg-slate-800 px-4 py-2 rounded-lg hover:bg-slate-700">
+          Register
+        </Link>
+      </div>
+      
 
     </div>
   )

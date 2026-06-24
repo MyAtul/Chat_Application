@@ -1,4 +1,5 @@
 import React from 'react'
+import Avatar from './Avatar'
 
 const Sidebar = (
   {
@@ -49,9 +50,14 @@ const Sidebar = (
                 }
               `}
             >
-              <h3 className='font-medium'>
-                {user.username}
-              </h3>
+              <div className='flex gap-2 items-center'>
+                <Avatar username={user.username}/>
+                <div>
+                  <p className='font-medium'>{user.username}</p>
+                </div>
+              </div>
+              
+              
             </div>
           ))  
         }
