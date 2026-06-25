@@ -4,7 +4,7 @@ import ChatHeader from '../components/ChatHeader'
 import MessageBubble from '../components/MessageBubble'
 import MessageList from '../components/MessageList'
 import MessageInput from '../components/MessageInput'
-import { getAllUsers } from '../services/userService'
+import { getAllUsers, getOnlineUsers } from '../services/userService'
 import { getChatHistory } from '../services/messageService'
 import { connectSocket } from '../websockets/socket'
 
@@ -13,6 +13,19 @@ const Chat = () => {
   const [users, setUsers] = useState([])
   const [selectedUser, setSelectedUser] = useState(null)
   const [messages, setMessages] = useState([])
+  const [onlineUsers, setOnlineUsers] = useState([])
+
+  const fetchOnlineUsers =async ()=>{
+
+    try{
+
+      const data = await getOnlineUsers()
+
+      setOnlineUsers(data)
+    }catch(error){
+      console.log(error)
+    }
+  }
 
   const fetchUser = async ()=>{
 
@@ -49,8 +62,17 @@ const Chat = () => {
     
   }
 
+  const handlePresenceUpdate = (onlineUsers)=>{
+    setOnlineUsers(onlineUsers)
+  }
+
   useEffect(()=>{
-    connectSocket(handleIncomingMessage)
+
+    connectSocket(
+      handleIncomingMessage,
+      handlePresenceUpdate
+    )
+
   },[])
 
   useEffect(()=>{
@@ -64,6 +86,7 @@ const Chat = () => {
   useEffect(()=>{
 
     fetchUser()
+    fetchOnlineUsers()
 
   },[])
 
@@ -84,6 +107,7 @@ const Chat = () => {
       users={filterUsers}
       selectedUser={selectedUser}
       setSelectedUser={setSelectedUser}
+      onlineUsers={onlineUsers}
       />
       <div className='flex-1 flex flex-col'>
         <ChatHeader

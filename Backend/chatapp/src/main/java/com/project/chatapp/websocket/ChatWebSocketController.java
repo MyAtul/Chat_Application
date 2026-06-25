@@ -1,4 +1,4 @@
-package com.project.chatapp.controller;
+package com.project.chatapp.websocket;
 
 import com.project.chatapp.dto.ChatMessage;
 import com.project.chatapp.entity.Message;

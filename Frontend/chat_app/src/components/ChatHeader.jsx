@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Avatar from './Avatar'
+import { disconnectSocket } from '../websockets/socket'
 
 const ChatHeader = ({currentuser}) => {
 
@@ -8,6 +9,8 @@ const ChatHeader = ({currentuser}) => {
 
   const handleLogout = ()=>{
 
+    disconnectSocket()
+    
     localStorage.removeItem("token")
     localStorage.removeItem("userId")
     localStorage.removeItem("username")

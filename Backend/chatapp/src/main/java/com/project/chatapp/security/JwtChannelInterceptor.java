@@ -1,7 +1,11 @@
 package com.project.chatapp.security;
 
+import com.project.chatapp.entity.User;
+import com.project.chatapp.event.UserConnectedEvent;
+import com.project.chatapp.repo.UserRepo;
 import com.project.chatapp.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -17,6 +21,12 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private UserRepo userRepo;
+
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
      public Message<?> preSend(
@@ -42,8 +52,17 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
                         )
                 );
 
-                accessor.getSessionAttributes()
-                                .put("username",username);
+                User user = userRepo.findByUsername(username).orElse(null);
+
+                if(user != null){
+
+                    accessor.getSessionAttributes().put("username",username);
+                    accessor.getSessionAttributes().put("userId",user.getId());
+
+                    applicationEventPublisher.publishEvent(
+                            new UserConnectedEvent(user.getId())
+                    );
+                }
             }
         }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { registerUser } from '../services/userService'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Register = () => {
 
@@ -68,6 +68,15 @@ const Register = () => {
                 </button>
 
             </form>
+
+            <div className='flex gap-2 justify-center items-center'>
+                Already Register ?
+                <Link to='/login'
+                    className='text-blue-500'
+                >
+                Login
+                </Link>
+            </div>
 
         </div>
 

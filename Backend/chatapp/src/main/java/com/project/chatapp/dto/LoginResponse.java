@@ -1,5 +1,9 @@
 package com.project.chatapp.dto;
 
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+
+@Component
 public class LoginResponse {
 
     private String token;

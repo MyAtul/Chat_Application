@@ -1,13 +1,16 @@
 import React from 'react'
 import Avatar from './Avatar'
+import ChatHeader from './ChatHeader'
 
 const Sidebar = (
   {
     users,
     selectedUser,
-    setSelectedUser
+    setSelectedUser,
+    onlineUsers
   }
 ) => {
+
   return (
     <div className="hidden md:flex flex-col w-80 border-r border-slate-800 bg-slate-900">
 
@@ -36,8 +39,11 @@ const Sidebar = (
       <div className="flex-1 overflow-y-auto">
         {
 
-          users.map((user)=>(
-            <div 
+          users.map((user)=>{
+
+            const isOnline = onlineUsers.includes(user.id)
+            return(
+              <div 
               key={user.id}
               onClick={()=>setSelectedUser(user)}
               className={`
@@ -46,12 +52,35 @@ const Sidebar = (
                   selectedUser?.id === user.id
                   ?"bg-slate-800 border-l-4 border-blue-500"
                   :"hover:bg-slate-800"
-
                 }
+                
               `}
             >
               <div className='flex gap-2 items-center'>
-                <Avatar username={user.username}/>
+                <div className="relative">
+
+                    <Avatar username={user.username}/>
+
+                    <span
+                        className={`
+                            absolute
+                            bottom-0
+                            right-0
+                            w-3
+                            h-3
+                            rounded-full
+                            border-2
+                            border-slate-900
+                            ${
+                                isOnline
+                                    ? "bg-green-500"
+                                    : "bg-gray-500"
+                            }
+                        `}
+                    />
+
+                </div>
+
                 <div>
                   <p className='font-medium'>{user.username}</p>
                 </div>
@@ -59,7 +88,8 @@ const Sidebar = (
               
               
             </div>
-          ))  
+            )   
+          })
         }
         
       </div>

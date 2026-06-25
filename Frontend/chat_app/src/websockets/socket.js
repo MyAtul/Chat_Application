@@ -3,7 +3,7 @@ import { Client } from "@stomp/stompjs";
 
 let stompClient = null;
 
-export const connectSocket = (onMessageReceived) => {
+export const connectSocket = (onMessageReceived,onPresenceUpdate) => {
 
     const token = localStorage.getItem("token");
 
@@ -23,18 +23,30 @@ export const connectSocket = (onMessageReceived) => {
 
         onConnect: () => {
 
-            const userId = localStorage.getItem("userId")
+            const userId = localStorage.getItem("userId");
 
+            // Private chat
             stompClient.subscribe(
                 `/topic/user${userId}`,
                 (message) => {
-
                     onMessageReceived(
-                        JSON.parse(message.body))
+                        JSON.parse(message.body)
+                    );
                 }
-            )
+            );
 
-            console.log("WebSocket Connected")
+            // Online users
+            stompClient.subscribe(
+                "/topic/presence",
+                (message) => {
+                    console.log("Presence Update:", JSON.parse(message.body));
+                    onPresenceUpdate(
+                        JSON.parse(message.body)
+                    );
+                }
+            );
+
+            console.log("WebSocket Connected");
         }
     })
 
@@ -42,10 +54,18 @@ export const connectSocket = (onMessageReceived) => {
 }
 
 export const sendSocketMessage = (receiverId,content) =>{
-    if(!stompClient) return
+    if(!stompClient || !stompClient.connected) return
 
     stompClient.publish({
         destination:"/app/sendMessage",
         body:JSON.stringify({receiverId,content})
     })
+}
+
+export const disconnectSocket = ()=>{
+
+    if(stompClient){
+        stompClient.deactivate()
+        stompClient = null
+    }
 }

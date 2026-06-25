@@ -11,7 +11,12 @@ const App = () => {
     <div className='bg-black text-white min-h-screen'>
       <Routes>
       <Route path='/' element={<Home/>}/>
-      <Route path='/login' element={<Login/>}/>
+      <Route path='/login' element={
+  
+          <Login/>
+        
+      }
+        />
       <Route path='/register' element={<Register/>} />
       <Route path='/chat' 
         element={
