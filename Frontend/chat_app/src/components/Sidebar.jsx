@@ -1,12 +1,11 @@
 import React from 'react'
 import Avatar from './Avatar'
-import ChatHeader from './ChatHeader'
 
 const Sidebar = (
   {
-    users,
-    selectedUser,
-    setSelectedUser,
+    conversations,
+    selectedConversation,
+    setSelectedConversation,
     onlineUsers
   }
 ) => {
@@ -39,17 +38,17 @@ const Sidebar = (
       <div className="flex-1 overflow-y-auto">
         {
 
-          users.map((user)=>{
+          conversations.map((conversation)=>{
 
-            const isOnline = onlineUsers.includes(user.id)
+            const isOnline = onlineUsers.includes(conversation.userId)
             return(
               <div 
-              key={user.id}
-              onClick={()=>setSelectedUser(user)}
+              key={conversation.userId}
+              onClick={()=>setSelectedConversation(conversation)}
               className={`
                 mx-3 mb-2 p-4 rounded cursor-pointer transition
                 ${
-                  selectedUser?.id === user.id
+                  selectedConversation?.userId === conversation.userId
                   ?"bg-slate-800 border-l-4 border-blue-500"
                   :"hover:bg-slate-800"
                 }
@@ -59,7 +58,7 @@ const Sidebar = (
               <div className='flex gap-2 items-center'>
                 <div className="relative">
 
-                    <Avatar username={user.username}/>
+                    <Avatar username={conversation.username}/>
 
                     <span
                         className={`
@@ -82,7 +81,10 @@ const Sidebar = (
                 </div>
 
                 <div>
-                  <p className='font-medium'>{user.username}</p>
+                  <p className='font-medium'>{conversation.username}</p>
+                   <p className='text-sm text-gray-400 truncate'>
+                    {conversation.lastMessage}
+                   </p>
                 </div>
               </div>
               

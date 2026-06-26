@@ -1,6 +1,7 @@
 package com.project.chatapp.service;
 
 import com.project.chatapp.dto.ChatMessage;
+import com.project.chatapp.dto.MessageResponse;
 import com.project.chatapp.dto.SendMessageRequest;
 import com.project.chatapp.entity.Message;
 import com.project.chatapp.entity.User;
@@ -40,7 +41,7 @@ public class MessageService {
         return messageRepo.findChatHistory(currentUser.getId(), receiverId);
     }
 
-    public Message saveWebSocketMessage(ChatMessage chatMessage, String username) {
+    public MessageResponse saveWebSocketMessage(ChatMessage chatMessage, String username) {
 
         User sender = userRepo.findByUsername(username).orElseThrow();
 
@@ -51,7 +52,14 @@ public class MessageService {
         message.setContent(chatMessage.getContent());
         message.setTimestamp(LocalDateTime.now());
 
-        messageRepo.save(message);
-        return message;
+        Message messageSaved = messageRepo.save(message);
+
+        return new MessageResponse(
+                messageSaved.getId(),
+                messageSaved.getSenderId(),
+                messageSaved.getReceiverId(),
+                messageSaved.getContent(),
+                messageSaved.getTimestamp()
+        );
     }
 }

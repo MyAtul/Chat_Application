@@ -1,6 +1,7 @@
 package com.project.chatapp.service;
 
 import com.project.chatapp.dto.UserResponse;
+import com.project.chatapp.entity.Message;
 import com.project.chatapp.entity.User;
 import com.project.chatapp.repo.MessageRepo;
 import com.project.chatapp.repo.UserRepo;
@@ -19,13 +20,11 @@ public class UserService {
     private MessageRepo messageRepo;
 
     public List<UserResponse> getAllUsers() {
-
-        List<User> users = userRepo.findAll();
-
-        return users.stream()
+        return userRepo.findAll()
+                .stream()
                 .map(user -> new UserResponse(
                         user.getId(),
-                        user.getUsername()))
-                .toList();
+                        user.getUsername()
+                )).toList();
     }
 }

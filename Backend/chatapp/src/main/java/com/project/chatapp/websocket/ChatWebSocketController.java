@@ -1,6 +1,7 @@
 package com.project.chatapp.websocket;
 
 import com.project.chatapp.dto.ChatMessage;
+import com.project.chatapp.dto.MessageResponse;
 import com.project.chatapp.entity.Message;
 import com.project.chatapp.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class ChatWebSocketController {
                         .getSessionAttributes()
                         .get("username");
 
-        Message savedMessage =
+        MessageResponse response =
                 messageService
                         .saveWebSocketMessage(
                                 message,
@@ -41,14 +42,14 @@ public class ChatWebSocketController {
 
         messagingTemplate.convertAndSend(
                 "/topic/user" +
-                        savedMessage.getReceiverId(),
-                savedMessage
+                        response.getReceiverId(),
+                response
         );
 
         messagingTemplate.convertAndSend(
                 "/topic/user" +
-                        savedMessage.getSenderId(),
-                savedMessage
+                        response.getSenderId(),
+                response
         );
     }
 }

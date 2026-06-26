@@ -1,19 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Sidebar from '../components/Sidebar'
 import ChatHeader from '../components/ChatHeader'
 import MessageBubble from '../components/MessageBubble'
 import MessageList from '../components/MessageList'
 import MessageInput from '../components/MessageInput'
-import { getAllUsers, getOnlineUsers } from '../services/userService'
+import { getOnlineUsers } from '../services/userService'
 import { getChatHistory } from '../services/messageService'
 import { connectSocket } from '../websockets/socket'
+import { getConversation } from '../services/conversationService'
 
 const Chat = () => {
 
-  const [users, setUsers] = useState([])
-  const [selectedUser, setSelectedUser] = useState(null)
+  const [conversations, setConversations] = useState([])
+  const [selectedConversation, setSelectedConversation] = useState(null)
   const [messages, setMessages] = useState([])
   const [onlineUsers, setOnlineUsers] = useState([])
+
+  const selectedConversationRef = useRef(null)
+
 
   const fetchOnlineUsers =async ()=>{
 
@@ -27,13 +31,13 @@ const Chat = () => {
     }
   }
 
-  const fetchUser = async ()=>{
+  const fetchConversations = async ()=>{
 
     try{
 
-      const data = await getAllUsers()
+      const data = await getConversation()
 
-      setUsers(data)
+      setConversations(data)
 
     }catch(error){
       console.log(error)
@@ -56,9 +60,31 @@ const Chat = () => {
     }
   }
 
+
+  useEffect(()=>{
+
+    selectedConversationRef.current = selectedConversation
+
+  },[selectedConversation])
+
   const handleIncomingMessage =(message)=>{
+
+    fetchConversations()
+
+    const conversation = selectedConversationRef.current
     
-    setMessages(prev=>[...prev,message])
+    if(!conversation) return
+
+    const belongToConversation = 
+          (message.senderId === conversation.userId &&
+            message.receiverId === currentUserId) || 
+
+            (message.senderId === currentUserId && 
+              message.receiverId === conversation.userId)
+
+    if(belongToConversation){
+        setMessages(prev=>[...prev,message])
+    }
     
   }
 
@@ -77,25 +103,21 @@ const Chat = () => {
 
   useEffect(()=>{
 
-    if(!selectedUser) return
+    if(!selectedConversation) return
 
-    fetchMessages(selectedUser.id)
+    fetchMessages(selectedConversation.userId)
 
-  },[selectedUser])
+  },[selectedConversation])
 
   useEffect(()=>{
 
-    fetchUser()
+    fetchConversations()
     fetchOnlineUsers()
 
   },[])
 
   const currentUserId = Number(localStorage.getItem("userId"))
   const currentuser = localStorage.getItem("username")
-
-  const filterUsers = users.filter(
-    user=>user.username !== currentuser
-  )
 
   return (
     <div className='h-screen bg-linear-to-br
@@ -104,9 +126,9 @@ const Chat = () => {
         to-slate-950 text-white flex'>
 
       <Sidebar
-      users={filterUsers}
-      selectedUser={selectedUser}
-      setSelectedUser={setSelectedUser}
+      conversations={conversations}
+      selectedConversation={selectedConversation}
+      setSelectedConversation={setSelectedConversation}
       onlineUsers={onlineUsers}
       />
       <div className='flex-1 flex flex-col'>
@@ -115,7 +137,7 @@ const Chat = () => {
         />
 
         {
-          selectedUser ? (
+          selectedConversation ? (
             <>
               <MessageList 
                 messages={messages}
@@ -123,8 +145,9 @@ const Chat = () => {
                 />
 
                 <MessageInput
-                selectedUser={selectedUser}
+                selectedConversation={selectedConversation}
                 fetchMessages={fetchMessages}
+                fetchConversations={fetchConversations}
               />
             </>
           ):(

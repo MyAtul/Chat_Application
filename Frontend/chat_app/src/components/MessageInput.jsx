@@ -2,7 +2,13 @@ import React, { useState } from 'react'
 import { sendMessage } from '../services/messageService'
 import { sendSocketMessage } from '../websockets/socket'
 
-const MessageInput = ({selectedUser,fetchMessages}) => {
+const MessageInput = (
+  {
+    selectedConversation,
+    fetchMessages,
+    fetchConversations
+  }
+  ) => {
 
   const [content, setContent] = useState('')
 
@@ -10,11 +16,13 @@ const MessageInput = ({selectedUser,fetchMessages}) => {
 
     if(!content.trim()) return
 
-    if(!selectedUser) return
+    if(!selectedConversation) return
 
     try{
 
-      await sendSocketMessage(selectedUser.id,content)
+      await sendSocketMessage(selectedConversation.userId,content)
+
+      await fetchConversations()
 
       setContent('')
 
