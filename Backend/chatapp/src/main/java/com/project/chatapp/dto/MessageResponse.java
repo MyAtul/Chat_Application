@@ -1,5 +1,6 @@
 package com.project.chatapp.dto;
 
+import com.project.chatapp.enums.MessageStatus;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -12,16 +13,20 @@ public class MessageResponse {
     private Long receiverId;
     private String content;
     private LocalDateTime timeStamp;
+    private MessageStatus status;
 
     public MessageResponse() {
     }
 
-    public MessageResponse(Long id, Long senderId, Long receiverId, String content, LocalDateTime timeStamp) {
+    public MessageResponse(Long id, Long senderId, Long receiverId, String content,
+                           LocalDateTime timeStamp,MessageStatus status)
+    {
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.content = content;
         this.timeStamp = timeStamp;
+        this.status = status;
     }
 
     public Long getId() {
@@ -62,5 +67,13 @@ public class MessageResponse {
 
     public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public MessageStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MessageStatus status) {
+        this.status = status;
     }
 }

@@ -6,7 +6,7 @@ import MessageList from '../components/MessageList'
 import MessageInput from '../components/MessageInput'
 import { getOnlineUsers } from '../services/userService'
 import { getChatHistory } from '../services/messageService'
-import { connectSocket } from '../websockets/socket'
+import { connectSocket, sendDelivered, sendRead } from '../websockets/socket'
 import { getConversation } from '../services/conversationService'
 
 const Chat = () => {
@@ -69,7 +69,22 @@ const Chat = () => {
 
   const handleIncomingMessage =(message)=>{
 
+    console.log(
+    "Incoming:",
+    message.id,
+    message.status,
+    message.senderId,
+    message.receiverId
+);
+
     fetchConversations()
+
+    if(message.status === 'SENT' &&
+      message.receiverId === currentUserId &&
+      message.senderId !== currentUserId
+    ){
+      sendDelivered(message.id)
+    }
 
     const conversation = selectedConversationRef.current
     
@@ -83,7 +98,18 @@ const Chat = () => {
               message.receiverId === conversation.userId)
 
     if(belongToConversation){
-        setMessages(prev=>[...prev,message])
+
+        setMessages(prev=>{
+          
+          const exists = prev.some(msg=>msg.id === message.id)
+
+          if(exists){
+            return prev.map(msg =>
+              msg.id === message.id ? message : msg
+            )
+          }
+          return [...prev,message]
+        })
     }
     
   }
@@ -106,6 +132,8 @@ const Chat = () => {
     if(!selectedConversation) return
 
     fetchMessages(selectedConversation.userId)
+
+    sendRead(selectedConversation.userId)
 
   },[selectedConversation])
 

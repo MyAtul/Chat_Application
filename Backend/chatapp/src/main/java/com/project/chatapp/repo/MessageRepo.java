@@ -1,10 +1,13 @@
 package com.project.chatapp.repo;
 
 import com.project.chatapp.entity.Message;
+import com.project.chatapp.enums.MessageStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,5 +42,28 @@ public interface MessageRepo extends JpaRepository<Message,Long> {
     List<Message> findConversations(
             @Param("user1") Long user1,
             @Param("user2") Long user2
+    );
+
+    @Transactional
+    @Modifying
+    @Query("""
+    UPDATE Message m
+    SET m.status = :status
+    WHERE m.id = :messageId
+    """)
+    void updateMessageStatus(
+            @Param("messageId") Long messageId,
+            @Param("status") MessageStatus status
+            );
+
+    List<Message> findBySenderIdAndReceiverIdAndStatus(
+            Long senderId,
+            Long receiverId,
+            MessageStatus status
+    );
+
+    List<Message> findByReceiverIdAndStatus(
+            Long receiverId,
+            MessageStatus status
     );
 }

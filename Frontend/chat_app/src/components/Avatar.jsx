@@ -2,7 +2,9 @@ import React from 'react'
 
 const Avatar = ({username}) => {
 
-    const firstLetter = username?.charAt(0)?.toUpperCase()
+    const safeUsername = username || ""
+
+    const firstLetter = safeUsername?.charAt(0)?.toUpperCase()
 
     const colors = [
         "bg-red-500",
@@ -15,7 +17,7 @@ const Avatar = ({username}) => {
 
     const color =
         colors[
-            username.length %
+            safeUsername.length %
             colors.length
         ]
 
@@ -23,7 +25,7 @@ const Avatar = ({username}) => {
     <div
     className={`w-12 h-12 flex justify-center items-center rounded-full ${color} bg-blue-700 shrink-0 font-bold text-lg`}
     >
-        {firstLetter}
+        {firstLetter || "?"}
     </div>
   )
 }
