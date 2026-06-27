@@ -6,7 +6,7 @@ import MessageList from '../components/MessageList'
 import MessageInput from '../components/MessageInput'
 import { getOnlineUsers } from '../services/userService'
 import { getChatHistory } from '../services/messageService'
-import { connectSocket, sendDelivered, sendRead } from '../websockets/socket'
+import { connectSocket,  sendRead } from '../websockets/socket'
 import { getConversation } from '../services/conversationService'
 
 const Chat = () => {
@@ -79,12 +79,7 @@ const Chat = () => {
 
     fetchConversations()
 
-    if(message.status === 'SENT' &&
-      message.receiverId === currentUserId &&
-      message.senderId !== currentUserId
-    ){
-      sendDelivered(message.id)
-    }
+  
 
     const conversation = selectedConversationRef.current
     
@@ -110,6 +105,14 @@ const Chat = () => {
           }
           return [...prev,message]
         })
+
+        if (
+              message.senderId === conversation.userId &&
+              message.receiverId === currentUserId &&
+              message.status === "DELIVERED"
+          ) {
+              sendRead(conversation.userId);
+          }
     }
     
   }

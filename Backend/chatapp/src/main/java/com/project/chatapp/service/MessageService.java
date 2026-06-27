@@ -23,6 +23,9 @@ public class MessageService {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private PresenceService presenceService;
+
     // REST API (optional)
     public Message sendMessage(SendMessageRequest request, String username) {
 
@@ -83,9 +86,16 @@ public class MessageService {
         messages.forEach(message ->
                 message.setStatus(MessageStatus.READ));
 
+        System.out.println("Found : " + messages.size());
+
+        messages.forEach(m ->
+                System.out.println(
+                        m.getId() + " " + m.getStatus()
+                ));
+
         List<Message> updatedMessages = messageRepo.saveAll(messages);
 
-        System.out.println("Messages Found : " + messages.size());
+        System.out.println("Saved");
 
         return updatedMessages
                 .stream()
@@ -132,7 +142,15 @@ public class MessageService {
         message.setReceiverId(receiverId);
         message.setContent(content);
         message.setTimestamp(LocalDateTime.now());
-        message.setStatus(MessageStatus.SENT);
+        if(presenceService.isOnline(receiverId)){
+            message.setStatus(MessageStatus.DELIVERED);
+        }else {
+            message.setStatus(MessageStatus.SENT);
+        }
+        System.out.println("Receiver: " + receiverId);
+        System.out.println("Is Online: " + presenceService.isOnline(receiverId));
+        System.out.println("Online Users: " + presenceService.getOnlineUsers());
+
 
         return message;
     }

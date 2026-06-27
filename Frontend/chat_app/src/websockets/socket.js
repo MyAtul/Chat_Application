@@ -70,20 +70,6 @@ export const disconnectSocket = ()=>{
     }
 }
 
-export const sendDelivered = (messageId)=>{
-
-    console.log("Message Id : ",messageId)
-
-    if(!stompClient || !stompClient.connected) 
-        return
-
-    stompClient.publish({
-        destination:"/app/message/delivered",
-        body: JSON.stringify({
-            messageId:messageId
-        })
-    })
-}
 
 export const sendRead = (senderId)=>{
 

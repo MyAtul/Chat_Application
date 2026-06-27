@@ -25,4 +25,8 @@ public class PresenceService {
     public Set<Long> getOnlineUsers(){
         return onlineUsers;
     }
+
+    public boolean isOnline (Long userId){
+        return onlineUsers.contains(userId);
+    }
 }
