@@ -1,234 +1,241 @@
-#  Real-Time Chat Application
+# ChatApp
 
-A full-stack real-time chat application built using **React**, **Spring Boot**, **Spring Security**, **JWT**, **WebSocket (STOMP + SockJS)**, and **MySQL**.
-
-The application allows users to register, log in securely, exchange messages instantly, and view the online/offline status of other users in real time.
+A full-stack real-time chat application built with Spring Boot, React, MySQL, and WebSocket (STOMP). The application supports secure authentication, real-time messaging, online presence, message delivery tracking, typing indicators, unread message counts, and a modern responsive user interface.
 
 ---
 
-##  Features
+## Features
 
 ### Authentication
+- JWT-based Authentication
+- User Registration
+- User Login
+- Protected Routes
+- Secure REST APIs
 
-* User Registration
-* User Login
-* JWT Authentication
-* Protected REST APIs
-* Protected WebSocket Connection
-* Secure Logout
+### Real-Time Messaging
+- Instant messaging using WebSocket (STOMP)
+- Persistent chat history
+- Automatic conversation updates
+- Auto-scrolling message list
 
-### Real-Time Chat
+### Message Status
+- Sent status
+- Delivered status
+- Read receipts
+- Offline message delivery
+- Automatic pending message synchronization
 
-* One-to-One Chat
-* Instant Message Delivery
-* Chat History
-* Auto Scroll
-* Enter to Send Message
-* Message Timestamp
+### Presence System
+- Real-time online users
+- Offline detection
+- Live presence updates
 
-### Online Presence
+### Typing Indicator
+- Real-time typing indicator
+- Typing status in chat header
+- Typing status in conversation sidebar
+- Optimized typing events using debounce
+- Supports multiple simultaneous typing users
 
-* Real-Time Online/Offline Status
-* Instant Presence Updates
-* Event-Driven Presence System
-* Browser Close Detection
-* Logout Detection
+### Conversation Management
+- Conversation sidebar
+- Latest message preview
+- Conversation sorting by latest message
+- Unread message count
+- Real-time sidebar updates
 
 ### User Interface
-
-* Responsive Design
-* User Avatars
-* Online/Offline Indicators
-* Clean Modern UI using Tailwind CSS
-
----
-
-#  Tech Stack
-
-## Frontend
-
-* React.js
-* React Router
-* Axios
-* Tailwind CSS
-* SockJS
-* STOMP.js
-
-## Backend
-
-* Spring Boot
-* Spring Security
-* Spring WebSocket
-* Spring Data JPA
-* Hibernate
-* JWT Authentication
-* Application Events
-
-## Database
-
-* MySQL
+- Responsive layout
+- Empty chat state
+- User avatars
+- Responsive message bubbles
+- Message timestamps
+- Emoji picker
+- Modern dark theme
+- Smooth animations
 
 ---
 
-# Architecture
+## Tech Stack
 
-```
-React
- │
- │ REST API
- ▼
-Spring Boot
- │
- ├── Authentication (JWT)
- ├── REST Controllers
- ├── WebSocket (STOMP)
- ├── Application Events
- ├── Services
- ├── Repository
- ▼
-MySQL
-```
+### Frontend
+- React
+- React Router DOM
+- Axios
+- Tailwind CSS
+- STOMP.js
+- SockJS
+- Lucide React
+- Emoji Picker React
 
----
+### Backend
+- Spring Boot
+- Spring Security
+- Spring WebSocket
+- JWT Authentication
+- Spring Data JPA
+- Hibernate
 
-#  Real-Time Message Flow
+### Database
+- MySQL
 
-```
-Sender
-   │
-   ▼
-WebSocket
-   │
-   ▼
-Spring Boot
-   │
-   ▼
-Save Message
-   │
-   ▼
-Broadcast Message
-   │
-   ▼
-Receiver
-```
+### Build Tools
+- Maven
+- Vite
 
 ---
 
-#  Online Presence Flow
+## Project Structure
+
+### Backend
 
 ```
-User Connects
-      │
-      ▼
-JWT Channel Interceptor
-      │
-      ▼
-Application Event
-      │
-      ▼
-Presence Event Listener
-      │
-      ▼
-Presence Service
-      │
-      ▼
-Presence Broadcaster
-      │
-      ▼
-React Updates Online Users
-```
+src/main/java/com/project/chatapp
 
----
-
-#  Project Structure
-
-```
-Backend
-│
 ├── config
 ├── controller
 ├── dto
 ├── entity
+├── enums
 ├── event
 ├── listener
 ├── repo
 ├── security
 ├── service
 └── websocket
+```
 
-Frontend
-│
+### Frontend
+
+```
+src
+
 ├── components
 ├── pages
 ├── services
-├── websocket
-└── assets
+├── websockets
+├── assets
+└── App.jsx
 ```
 
 ---
 
-#  Installation
+## Implemented Features
 
-## Clone Repository
+- User Authentication
+- JWT Authorization
+- Secure REST APIs
+- WebSocket Communication
+- Real-Time Messaging
+- Online/Offline Presence
+- Conversation Sidebar
+- Chat History
+- Message Status Tracking
+- Offline Message Delivery
+- Read Receipts
+- Typing Indicator
+- Multiple Typing Users
+- Unread Message Badge
+- Emoji Picker
+- Responsive UI
+- Auto Scroll
+- Empty State
+- Conversation Sorting
+
+---
+
+## Future Improvements
+
+### Messaging
+- Image Sharing
+- File Sharing
+- Reply to Messages
+- Forward Messages
+- Edit Messages
+- Delete Messages
+- Message Reactions
+- Message Search
+- Date Separators
+- Voice Messages
+
+### User Experience
+- Search Conversations
+- User Profile Pictures
+- Theme Switching
+- Last Seen Status
+- Push Notifications
+- Browser Notifications
+- Sound Notifications
+- Mobile UI Improvements
+
+### Advanced Features
+- Group Chats
+- Video Calling
+- Audio Calling
+- Message Encryption
+- Message Pinning
+- User Blocking
+- Archive Chats
+- Chat Backup
+
+---
+
+## Installation
+
+### Clone Repository
 
 ```bash
-git clone https://github.com/MyAtul/Chat_Application.git
+git clone <repository-url>
 ```
 
----
-
-## Backend
-
-1. Open in IntelliJ IDEA
-2. Configure MySQL
-3. Update `application.properties`
-
-```properties
-spring.datasource.url=YOUR_DATABASE_URL
-spring.datasource.username=YOUR_USERNAME
-spring.datasource.password=YOUR_PASSWORD
-```
-
-4. Run Spring Boot
-
----
-
-## Frontend
+### Backend
 
 ```bash
-cd Frontend/chat_app
+cd Backend/chatapp
+
+mvn clean install
+
+mvn spring-boot:run
+```
+
+### Frontend
+
+```bash
+cd Frontend/chatapp
 
 npm install
 
 npm run dev
 ```
 
+---
 
-#  Future Improvements
+## Environment
 
-* Group Chat
-* File Sharing
-* Image Sharing
-* Emoji Support
-* Typing Indicator
-* Read Receipts
-* Last Message Preview
-* Unread Message Count
-* User Profile Images
-* Message Search
-* Push Notifications
-* Cloud Deployment
+Create an `application.properties` file containing:
+
+```
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+
+jwt.secret=
+jwt.expiration=
+```
 
 ---
 
-#  Author
+## Screenshots
 
-**Atul Yadav**
-
-GitHub: https://github.com/MyAtul
+Project screenshots will be added here.
 
 ---
 
-#  If you like this project
+## Author
 
-Give this repository a ⭐ on GitHub.
+Atul Yadav
+
+Computer Engineering Student
+
+Full Stack Java Developer
