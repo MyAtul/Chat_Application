@@ -50,11 +50,17 @@ public class ConversationService {
                             ?null
                             : latestMessage.getTimeStamp();
 
+                    Long unreadCount = messageRepo.countUnreadMessage(
+                            user.getId(),
+                            currentUser.getId()
+                    );
+
                     return new ConversationResponse(
                             user.getId(),
                             user.getUsername(),
                             lastMessage,
-                            lastMessageTime
+                            lastMessageTime,
+                            unreadCount
                     );
                 }).sorted(
                         Comparator.comparing(

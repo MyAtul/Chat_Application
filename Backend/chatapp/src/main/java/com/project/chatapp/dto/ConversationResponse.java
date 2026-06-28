@@ -11,13 +11,15 @@ public class ConversationResponse {
     private String username;
     private String lastMessage;
     private LocalDateTime lastMessageTime;
+    private Long unreadCount;
     public ConversationResponse(){}
 
-    public ConversationResponse(Long userId, String username, String lastMessage, LocalDateTime lastMessageTime) {
+    public ConversationResponse(Long userId, String username, String lastMessage, LocalDateTime lastMessageTime,Long unreadCount) {
         this.userId = userId;
         this.username = username;
         this.lastMessage = lastMessage;
         this.lastMessageTime = lastMessageTime;
+        this.unreadCount = unreadCount;
     }
 
     public Long getUserId() {
@@ -52,4 +54,11 @@ public class ConversationResponse {
         this.lastMessageTime = lastMessageTime;
     }
 
+    public Long getUnreadCount() {
+        return unreadCount;
+    }
+
+    public void setUnreadCount(Long unreadCount) {
+        this.unreadCount = unreadCount;
+    }
 }

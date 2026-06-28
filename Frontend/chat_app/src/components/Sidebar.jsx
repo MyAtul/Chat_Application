@@ -131,9 +131,23 @@ const Sidebar = ({
                                     {/* Username + Last Message */}
                                     <div className="flex-1 min-w-0">
 
-                                        <p className="font-semibold truncate">
-                                            {conversation.username}
-                                        </p>
+                                        <div className='flex justify-between items-center'>
+
+                                            <p className='font-medium truncate'>
+                                                {conversation.username}
+                                            </p>
+
+                                            {
+                                                conversation.unreadCount > 0 && (
+                                                    <span className='flex justify-center items-center ml-2 h-5 bg-blue-500
+                                                        rounded-full min-w-5 px-2 text-white font-semibold text-xs'
+                                                    >
+                                                        {conversation.unreadCount}
+                                                    </span>
+                                                )
+                                            }
+
+                                        </div>
 
                                         <p className={`
                                             text-sm truncate ${

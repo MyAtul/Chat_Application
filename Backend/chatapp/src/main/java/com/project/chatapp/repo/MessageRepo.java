@@ -56,6 +56,23 @@ public interface MessageRepo extends JpaRepository<Message,Long> {
             @Param("status") MessageStatus status
             );
 
+
+    @Query("""
+    SELECT COUNT(m)
+    FROM Message m
+    WHERE
+    m.senderId = :senderId
+    AND
+    m.receiverId = :receiverId
+    AND
+    m.status <> com.project.chatapp.enums.MessageStatus.READ
+    """)
+    Long countUnreadMessage(
+            @Param("senderId") Long senderId,
+            @Param("receiverId") Long receiverId
+    );
+
+
     List<Message> findBySenderIdAndReceiverIdAndStatus(
             Long senderId,
             Long receiverId,
@@ -66,4 +83,6 @@ public interface MessageRepo extends JpaRepository<Message,Long> {
             Long receiverId,
             MessageStatus status
     );
+
+
 }
