@@ -1,103 +1,160 @@
 import React from 'react'
 import Avatar from './Avatar'
+import { Search } from 'lucide-react'
 
-const Sidebar = (
-  {
+const Sidebar = ({
     conversations,
     selectedConversation,
     setSelectedConversation,
     onlineUsers
-  }
-) => {
+}) => {
 
-  return (
-    <div className="hidden md:flex flex-col w-80 border-r border-slate-800 bg-slate-900">
+    return (
+        <div className="hidden md:flex flex-col w-80 border-r border-slate-800 bg-slate-900">
 
-      <div className="p-6">
+            {/* Header */}
+            <div className="p-6 border-b border-slate-800">
 
-        <h1 className="text-3xl font-bold">
-          Chats
-        </h1>
+                <div className="flex items-center justify-between">
 
-        <input
-          placeholder="Search users..."
-          className="
-            mt-6
-            w-full
-            hover:bg-slate-800
-            transition
-            rounded-xl
-            px-4
-            py-3
-            outline-none
-          "
-        />
+                    <h1 className="text-3xl font-bold">
+                        Chats
+                    </h1>
 
-      </div>
+                    <span className="text-sm text-slate-400 bg-slate-800 px-3 py-1 rounded-full">
+                        {conversations.length}
+                    </span>
 
-      <div className="flex-1 overflow-y-auto">
-        {
+                </div>
 
-          conversations.map((conversation)=>{
+                {/* Search */}
+                <div className="relative mt-6">
 
-            const isOnline = onlineUsers.includes(conversation.userId)
-            return(
-              <div 
-              key={conversation.userId}
-              onClick={()=>setSelectedConversation(conversation)}
-              className={`
-                mx-3 mb-2 p-4 rounded cursor-pointer transition
-                ${
-                  selectedConversation?.userId === conversation.userId
-                  ?"bg-slate-800 border-l-4 border-blue-500"
-                  :"hover:bg-slate-800"
-                }
-                
-              `}
-            >
-              <div className='flex gap-2 items-center'>
-                <div className="relative">
-
-                    <Avatar username={conversation.username}/>
-
-                    <span
-                        className={`
+                    <Search
+                        size={18}
+                        className="
                             absolute
-                            bottom-0
-                            right-0
-                            w-3
-                            h-3
-                            rounded-full
-                            border-2
-                            border-slate-900
-                            ${
-                                isOnline
-                                    ? "bg-green-500"
-                                    : "bg-gray-500"
-                            }
-                        `}
+                            left-4
+                            top-1/2
+                            -translate-y-1/2
+                            text-slate-400
+                        "
+                    />
+
+                    <input
+                        placeholder="Search users..."
+                        className="
+                            w-full
+                            bg-slate-800
+                            hover:bg-slate-700
+                            focus:bg-slate-700
+                            transition
+                            rounded-xl
+                            pl-11
+                            pr-4
+                            py-3
+                            outline-none
+                            text-sm
+                            placeholder:text-slate-400
+                        "
                     />
 
                 </div>
 
-                <div>
-                  <p className='font-medium'>{conversation.username}</p>
-                   <p className='text-sm text-gray-400 truncate'>
-                    {conversation.lastMessage}
-                   </p>
-                </div>
-              </div>
-              
-              
             </div>
-            )   
-          })
-        }
-        
-      </div>
 
-    </div>
-  )
+            {/* Conversation List */}
+            <div className="flex-1 overflow-y-auto py-3">
+
+                {
+                    conversations.map((conversation) => {
+
+                        const isOnline =
+                            onlineUsers.includes(conversation.userId)
+
+                        return (
+
+                            <div
+                                key={conversation.userId}
+                                onClick={() =>
+                                    setSelectedConversation(conversation)
+                                }
+                                className={`
+                                    mx-3
+                                    mb-2
+                                    p-4
+                                    rounded-2xl
+                                    cursor-pointer
+                                    transition-all
+                                    duration-200
+
+                                    ${
+                                        selectedConversation?.userId === conversation.userId
+                                            ? "bg-slate-800 border border-blue-500/40 shadow-lg shadow-blue-500/10"
+                                            : "hover:bg-slate-800 hover:scale-[1.01]"
+                                    }
+                                `}
+                            >
+
+                                <div className="flex items-center gap-3">
+
+                                    {/* Avatar */}
+                                    <div className="relative">
+
+                                        <Avatar
+                                            username={conversation.username}
+                                        />
+
+                                        <span
+                                            className={`
+                                                absolute
+                                                -bottom-0.5
+                                                -right-0.5
+                                                w-3.5
+                                                h-3.5
+                                                rounded-full
+                                                border-2
+                                                border-slate-900
+                                                ${
+                                                    isOnline
+                                                        ? "bg-green-500 animate-pulse"
+                                                        : "bg-gray-500"
+                                                }
+                                            `}
+                                        />
+
+                                    </div>
+
+                                    {/* Username + Last Message */}
+                                    <div className="flex-1 min-w-0">
+
+                                        <p className="font-semibold truncate">
+                                            {conversation.username}
+                                        </p>
+
+                                        <p className="text-sm text-slate-400 truncate">
+                                            {
+                                                conversation.lastMessage
+                                                    ? conversation.lastMessage
+                                                    : "Start chatting..."
+                                            }
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        )
+
+                    })
+                }
+
+            </div>
+
+        </div>
+    )
 }
 
 export default Sidebar

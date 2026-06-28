@@ -24,7 +24,7 @@ public interface MessageRepo extends JpaRepository<Message,Long> {
         (m.senderId = :user1 AND m.receiverId = :user2)
         OR
         (m.senderId = :user2 AND m.receiverId = :user1)
-        ORDER BY m.timestamp ASC
+        ORDER BY m.timeStamp ASC
         """)
     List<Message> findChatHistory(@Param("user1") Long user1,
                                   @Param("user2") Long user2);
@@ -37,7 +37,7 @@ public interface MessageRepo extends JpaRepository<Message,Long> {
         (m.senderId = :user1 AND m.receiverId = :user2)
         OR
         (m.senderId = :user2 AND m.receiverId = :user1)
-    ORDER BY m.timestamp DESC
+    ORDER BY m.timeStamp DESC
     """)
     List<Message> findConversations(
             @Param("user1") Long user1,

@@ -16,7 +16,7 @@ public class Message {
     private Long receiverId;
     private String content;
 
-    private LocalDateTime timestamp;
+    private LocalDateTime timeStamp;
 
     @Enumerated(EnumType.STRING)
     private MessageStatus status;
@@ -53,12 +53,12 @@ public class Message {
         this.content = content;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public LocalDateTime getTimeStamp() {
+        return timeStamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setTimeStamp(LocalDateTime timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public MessageStatus getStatus() {

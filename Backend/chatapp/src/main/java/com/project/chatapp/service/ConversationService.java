@@ -43,12 +43,12 @@ public class ConversationService {
                             : conversation.get(0);
 
                     String lastMessage = latestMessage == null
-                            ? "No message yet"
+                            ? ""
                             :latestMessage.getContent();
 
                     LocalDateTime lastMessageTime = latestMessage == null
                             ?null
-                            : latestMessage.getTimestamp();
+                            : latestMessage.getTimeStamp();
 
                     return new ConversationResponse(
                             user.getId(),

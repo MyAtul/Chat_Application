@@ -129,7 +129,7 @@ public class MessageService {
                 message.getSenderId(),
                 message.getReceiverId(),
                 message.getContent(),
-                message.getTimestamp(),
+                message.getTimeStamp(),
                 message.getStatus()
         );
     }
@@ -141,7 +141,7 @@ public class MessageService {
         message.setSenderId(senderId);
         message.setReceiverId(receiverId);
         message.setContent(content);
-        message.setTimestamp(LocalDateTime.now());
+        message.setTimeStamp(LocalDateTime.now());
         if(presenceService.isOnline(receiverId)){
             message.setStatus(MessageStatus.DELIVERED);
         }else {

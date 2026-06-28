@@ -8,6 +8,7 @@ import { getOnlineUsers } from '../services/userService'
 import { getChatHistory } from '../services/messageService'
 import { connectSocket,  sendRead } from '../websockets/socket'
 import { getConversation } from '../services/conversationService'
+import EmptyState from '../components/EmptyState'
 
 const Chat = () => {
 
@@ -51,6 +52,7 @@ const Chat = () => {
     try{
 
       const message = await getChatHistory(receiverId)
+      console.log(message);
       setMessages(message)
 
     }catch(error){
@@ -68,18 +70,10 @@ const Chat = () => {
   },[selectedConversation])
 
   const handleIncomingMessage =(message)=>{
-
-    console.log(
-    "Incoming:",
-    message.id,
-    message.status,
-    message.senderId,
-    message.receiverId
-);
+    
+    console.log(message)
 
     fetchConversations()
-
-  
 
     const conversation = selectedConversationRef.current
     
@@ -182,9 +176,7 @@ const Chat = () => {
               />
             </>
           ):(
-            <div className='flex-1 flex items-center justify-center text-slate-400'>
-              Select a user to Start conversation
-            </div>
+            <EmptyState/>
           )
         }
         
