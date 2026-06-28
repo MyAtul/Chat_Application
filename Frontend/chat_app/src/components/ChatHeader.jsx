@@ -3,7 +3,14 @@ import { Link, useNavigate } from 'react-router-dom'
 import Avatar from './Avatar'
 import { disconnectSocket } from '../websockets/socket'
 
-const ChatHeader = ({currentuser}) => {
+const ChatHeader = (
+  {
+    selectedConversation,
+    onlineUsers,
+    typingEvent
+  }
+
+) => {
 
   const navigate = useNavigate()
 
@@ -17,6 +24,16 @@ const ChatHeader = ({currentuser}) => {
 
     navigate("/login")
   }
+
+  const isOnline =
+        selectedConversation &&
+        onlineUsers.includes(selectedConversation.userId)
+  
+  const isTyping = 
+        typingEvent &&
+        selectedConversation &&
+        typingEvent.senderId === selectedConversation.userId
+
   return (
     <div className="
       h-20
@@ -29,14 +46,50 @@ const ChatHeader = ({currentuser}) => {
       bg-slate-900
     ">
 
-      <div>
-        <h2 className="font-semibold text-xl capitalize flex items-center gap-3">
-          <Avatar username={currentuser}/> {currentuser}
-        </h2>
+      <div className='flex items-center gap-4'>
 
-        <p className="text-green-500 text-sm">
-          Online
-        </p>
+        {
+          selectedConversation &&
+          <Avatar 
+            username={selectedConversation.username}
+          />
+        }
+
+        <div>
+
+          <h2 className='text-lg font-semibold captalize'>
+            {
+              selectedConversation
+              ?selectedConversation.username
+              :"ChatApp"
+            }
+          </h2>
+
+          <p className={`
+            text-sm
+            ${
+              isTyping
+                ?"text-blue-400 italic animate-pulse"
+                :isOnline
+                  ?"text-green-500"
+                  :"text-gray-500"
+            }
+          `}
+          >
+            
+            {
+
+              isTyping
+                ?"Typing..."
+                :isOnline
+                  ?"online"
+                  :"offline"
+
+            }
+
+          </p>
+        </div>
+
       </div>
 
       <div className='flex gap-5'>
@@ -48,7 +101,6 @@ const ChatHeader = ({currentuser}) => {
 
         <Link 
         to='/register'
-        onClick={handleLogout}
         className="bg-slate-800 px-4 py-2 rounded-lg hover:bg-slate-700">
           Register
         </Link>

@@ -6,7 +6,8 @@ const Sidebar = ({
     conversations,
     selectedConversation,
     setSelectedConversation,
-    onlineUsers
+    onlineUsers,
+    typingUsers
 }) => {
 
     return (
@@ -72,6 +73,8 @@ const Sidebar = ({
                         const isOnline =
                             onlineUsers.includes(conversation.userId)
 
+                        const isTyping = !!typingUsers[conversation.userId]
+
                         return (
 
                             <div
@@ -132,11 +135,18 @@ const Sidebar = ({
                                             {conversation.username}
                                         </p>
 
-                                        <p className="text-sm text-slate-400 truncate">
+                                        <p className={`
+                                            text-sm truncate ${
+                                                isTyping
+                                                ?"text-blue-500"
+                                                :"text-gray-500"
+                                            }
+                                        `}
+                                        >
                                             {
-                                                conversation.lastMessage
-                                                    ? conversation.lastMessage
-                                                    : "Start chatting..."
+                                                isTyping
+                                                ?"Typing..."
+                                                : conversation.lastMessage
                                             }
                                         </p>
 

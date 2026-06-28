@@ -16,6 +16,8 @@ const Chat = () => {
   const [selectedConversation, setSelectedConversation] = useState(null)
   const [messages, setMessages] = useState([])
   const [onlineUsers, setOnlineUsers] = useState([])
+  const [typingEvent, setTypingEvent] = useState(null)
+  const [typingUsers, setTypingUsers] = useState({})
 
   const selectedConversationRef = useRef(null)
 
@@ -70,9 +72,7 @@ const Chat = () => {
   },[selectedConversation])
 
   const handleIncomingMessage =(message)=>{
-    
-    console.log(message)
-
+  
     fetchConversations()
 
     const conversation = selectedConversationRef.current
@@ -115,10 +115,33 @@ const Chat = () => {
     setOnlineUsers(onlineUsers)
   }
 
+  const handleTyping = (event)=>{
+
+    setTypingEvent(event.typing ? event : null)
+
+    setTypingUsers(prev =>{
+      
+      const update = {...prev}
+
+      if(event.typing){
+
+        update[event.senderId] = event
+
+      }else{
+
+        delete update[event.senderId]
+
+      }
+      return update
+    })
+
+  }
+
   useEffect(()=>{
 
     connectSocket(
       handleIncomingMessage,
+      handleTyping,
       handlePresenceUpdate
     )
 
@@ -141,6 +164,12 @@ const Chat = () => {
 
   },[])
 
+  useEffect(()=>{
+
+    setTypingEvent(null)
+
+  },[selectedConversation])
+
   const currentUserId = Number(localStorage.getItem("userId"))
   const currentuser = localStorage.getItem("username")
 
@@ -155,10 +184,13 @@ const Chat = () => {
       selectedConversation={selectedConversation}
       setSelectedConversation={setSelectedConversation}
       onlineUsers={onlineUsers}
+      typingUsers={typingUsers}
       />
       <div className='flex-1 flex flex-col'>
         <ChatHeader
-        currentuser={currentuser}
+        selectedConversation={selectedConversation}
+        onlineUsers={onlineUsers}
+        typingEvent={typingEvent}
         />
 
         {

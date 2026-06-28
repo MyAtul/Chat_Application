@@ -3,6 +3,7 @@ package com.project.chatapp.websocket;
 import com.project.chatapp.dto.ChatMessage;
 import com.project.chatapp.dto.MessageResponse;
 import com.project.chatapp.dto.ReadMessageRequest;
+import com.project.chatapp.event.TypingEvent;
 import com.project.chatapp.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -86,5 +87,30 @@ public class ChatWebSocketController {
                 });
 
 
+    }
+
+    @MessageMapping("/typing")
+    public void typing(
+            TypingEvent event,
+            org.springframework.messaging.Message<?> msg
+    ){
+
+        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(msg);
+
+        String username = (String) accessor
+                .getSessionAttributes()
+                .get("username");
+
+        Long senderId = (Long) accessor
+                .getSessionAttributes()
+                .get("userId");
+
+        event.setSenderUsername(username);
+        event.setSenderId(senderId);
+
+        messagingTemplate.convertAndSend(
+                "/topic/user"+event.getReceiverId(),
+                event
+        );
     }
 }

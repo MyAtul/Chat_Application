@@ -3,7 +3,7 @@ import { Client } from "@stomp/stompjs";
 
 let stompClient = null;
 
-export const connectSocket = (onMessageReceived,onPresenceUpdate) => {
+export const connectSocket = (onMessageReceived,onTypingReceived,onPresenceUpdate) => {
 
     const token = localStorage.getItem("token");
 
@@ -29,9 +29,15 @@ export const connectSocket = (onMessageReceived,onPresenceUpdate) => {
             stompClient.subscribe(
                 `/topic/user${userId}`,
                 (message) => {
-                    onMessageReceived(
-                        JSON.parse(message.body)
-                    );
+
+                    const data = JSON.parse(message.body)
+                    
+                    if("typing" in data){
+                        onTypingReceived(data)
+                    }else{
+                        onMessageReceived(data)
+                    }
+                    
                 }
             );
 
@@ -73,8 +79,6 @@ export const disconnectSocket = ()=>{
 
 export const sendRead = (senderId)=>{
 
-    console.log("Sending Read:",senderId)
-
     if(!stompClient || !stompClient.connected)
         return
 
@@ -82,6 +86,23 @@ export const sendRead = (senderId)=>{
         destination:"/app/message/read",
         body:JSON.stringify({
             senderId:senderId
+        })
+    })
+}
+
+export const sendTyping = (receiverId,typing)=>{
+
+    console.log("receiverId : ",receiverId)
+    console.log("typing :",typing)
+
+    if(!stompClient || !stompClient.connected)
+        return
+
+    stompClient.publish({
+        destination:"/app/typing",
+        body:JSON.stringify({
+            receiverId,
+            typing
         })
     })
 }

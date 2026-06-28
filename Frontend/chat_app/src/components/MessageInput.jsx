@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { sendMessage } from '../services/messageService'
-import { sendSocketMessage } from '../websockets/socket'
+import { sendSocketMessage, sendTyping } from '../websockets/socket'
 
 const MessageInput = (
   {
@@ -12,6 +12,17 @@ const MessageInput = (
 
   const [content, setContent] = useState('')
 
+  const typingTimeout =  useRef(null)
+  const isTyping = useRef(false)
+
+  useEffect(()=>{
+
+    return ()=>{
+      clearTimeout(typingTimeout.current)
+    }
+
+  },[])
+
   const handelSend =async ()=>{
 
     if(!content.trim()) return
@@ -21,6 +32,12 @@ const MessageInput = (
     try{
 
       await sendSocketMessage(selectedConversation.userId,content)
+
+      sendTyping(selectedConversation.userId,false)
+
+      isTyping.current = false
+
+      clearTimeout(typingTimeout.current)
 
       await fetchConversations()
 
@@ -32,6 +49,43 @@ const MessageInput = (
 
     }
 
+  }
+
+  const handleChange = (e)=>{
+
+    if(!selectedConversation)
+      return
+
+    const value = e.target.value
+    setContent(value)
+
+    if(value.trim() === ""){
+
+      sendTyping(selectedConversation.userId,false)
+
+      isTyping.current = false
+
+      clearTimeout(typingTimeout.current)
+      return
+    }
+
+    if(!isTyping.current){
+
+      sendTyping(selectedConversation.userId,true)
+
+      isTyping.current = true
+
+    }
+
+    clearTimeout(typingTimeout.current)
+
+    typingTimeout.current = setTimeout(()=>{
+
+      sendTyping(selectedConversation.userId,false)
+
+      isTyping.current = false
+
+    },1000)
   }
 
   return (
@@ -46,12 +100,10 @@ const MessageInput = (
 
         <input
           value={content}
-          onChange={(elem)=>{
-            setContent(elem.target.value)
-          }}
-
+          onChange={handleChange}
           onKeyDown={(e)=>{
-            if(e.key === "Enter"){
+            if(e.key === "Enter" && !e.shiftKey){
+              e.preventDefault()
               handelSend()
             }
           }}
