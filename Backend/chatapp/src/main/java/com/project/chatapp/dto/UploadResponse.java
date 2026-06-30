@@ -1,42 +1,17 @@
 package com.project.chatapp.dto;
 
-import com.project.chatapp.enums.MessageType;
+public class UploadResponse {
 
-public class ChatMessage {
-
-    private Long receiverId;
-    private String content;
-
-    private MessageType messageType;
     private String attachmentUrl;
     private String attachmentName;
     private Long attachmentSize;
 
-    public ChatMessage(){
-    }
+    public UploadResponse(){}
 
-    public Long getReceiverId() {
-        return receiverId;
-    }
-
-    public void setReceiverId(Long receiverId) {
-        this.receiverId = receiverId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public MessageType getMessageType() {
-        return messageType;
-    }
-
-    public void setMessageType(MessageType messageType) {
-        this.messageType = messageType;
+    public UploadResponse(String attachmentUrl, String attachmentName, Long attachmentSize) {
+        this.attachmentUrl = attachmentUrl;
+        this.attachmentName = attachmentName;
+        this.attachmentSize = attachmentSize;
     }
 
     public String getAttachmentUrl() {

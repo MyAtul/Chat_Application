@@ -158,6 +158,7 @@ const Sidebar = ({
                                         `}
                                         >
                                             {
+                                                
                                                 isTyping
                                                 ?"Typing..."
                                                 : conversation.lastMessage

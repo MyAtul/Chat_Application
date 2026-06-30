@@ -31,8 +31,11 @@ public class SecurityConfig {
                         session.sessionCreationPolicy
                                 (SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->auth
-                        .requestMatchers("/auth/**",
-                                "/chat/**")
+                        .requestMatchers(
+                                "/auth/**",
+                                "/chat/**",
+                                "/uploads/**"
+                        )
                         .permitAll()
                         .anyRequest()
                         .authenticated())

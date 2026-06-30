@@ -23,9 +23,22 @@ const MessageBubble = (
                 }
             `}
         >
-            <p className="wrap-break-words">
-                {message.content}
-            </p>
+            {
+                message.messageType === 'IMAGE' ? (
+
+                    <button 
+                        type='button'
+                        className='rounded-xl overflow-hidden'
+                    >
+                        <img src={`http://localhost:8080${message.attachmentUrl}`} alt={message.attachmentName} 
+                            className='rounded-xl max-w-xl max-h-80 cursor-pointer object-cover hover:opacity-90'
+                        />
+                    </button>
+                    
+                ): <p>
+                    {message.content}
+                </p>
+            }
 
             <div className="flex justify-end items-center gap-1 mt-1 opacity-80">
 

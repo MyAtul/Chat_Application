@@ -31,6 +31,7 @@ export const connectSocket = (onMessageReceived,onTypingReceived,onPresenceUpdat
                 (message) => {
 
                     const data = JSON.parse(message.body)
+                    console.log("RAW SOCKET:", JSON.parse(message.body));
                     
                     if("typing" in data){
                         onTypingReceived(data)
@@ -59,12 +60,12 @@ export const connectSocket = (onMessageReceived,onTypingReceived,onPresenceUpdat
     stompClient.activate();
 }
 
-export const sendSocketMessage = (receiverId,content) =>{
+export const sendSocketMessage = (message) =>{
     if(!stompClient || !stompClient.connected) return
 
     stompClient.publish({
         destination:"/app/sendMessage",
-        body:JSON.stringify({receiverId,content})
+        body:JSON.stringify(message)
     })
 }
 

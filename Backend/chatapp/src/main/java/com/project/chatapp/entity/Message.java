@@ -1,6 +1,7 @@
 package com.project.chatapp.entity;
 
 import com.project.chatapp.enums.MessageStatus;
+import com.project.chatapp.enums.MessageType;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,13 @@ public class Message {
     private Long senderId;
     private Long receiverId;
     private String content;
+
+    @Enumerated(EnumType.STRING)
+    private MessageType messageType;
+
+    private String attachmentUrl;
+    private String attachmentName;
+    private Long attachmentSize;
 
     private LocalDateTime timeStamp;
 
@@ -67,5 +75,37 @@ public class Message {
 
     public void setStatus(MessageStatus status) {
         this.status = status;
+    }
+
+    public MessageType getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(MessageType messageType) {
+        this.messageType = messageType;
+    }
+
+    public String getAttachmentUrl() {
+        return attachmentUrl;
+    }
+
+    public void setAttachmentUrl(String attachmentUrl) {
+        this.attachmentUrl = attachmentUrl;
+    }
+
+    public String getAttachmentName() {
+        return attachmentName;
+    }
+
+    public void setAttachmentName(String attachmentName) {
+        this.attachmentName = attachmentName;
+    }
+
+    public Long getAttachmentSize() {
+        return attachmentSize;
+    }
+
+    public void setAttachmentSize(Long attachmentSize) {
+        this.attachmentSize = attachmentSize;
     }
 }

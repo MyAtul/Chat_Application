@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { sendMessage } from '../services/messageService'
 import { sendSocketMessage, sendTyping } from '../websockets/socket'
-import { Smile } from 'lucide-react'
+import { Paperclip, Smile } from 'lucide-react'
 import EmojiPicker from "emoji-picker-react";
+import AttachmentMenu from './AttachmentMenu';
+import { uploadImage } from '../services/uploadService';
 
 const MessageInput = (
   {
@@ -14,10 +16,16 @@ const MessageInput = (
 
   const [content, setContent] = useState('')
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+  const [showAttachmentMenu, setShowAttachmentMenu] = useState(false)
 
   const typingTimeout =  useRef(null)
   const isTyping = useRef(false)
   const emojiPickerRef = useRef(null)
+  const attachmentMenuRef = useRef(null)
+  const imageInputRef = useRef(null)
+  const audioInputRef = useRef(null)
+  const videoInputRef = useRef(null)
+  const documentInputRef = useRef(null)
 
   useEffect(()=>{
 
@@ -35,7 +43,14 @@ const MessageInput = (
 
     try{
 
-      await sendSocketMessage(selectedConversation.userId,content)
+      await sendSocketMessage({
+        receiverId:selectedConversation.userId,
+        content:content,
+        messageType: "TEXT",
+        attachmentUrl: null,
+        attachmentName: null,
+        attachmentSize: null
+      })
 
       sendTyping(selectedConversation.userId,false)
 
@@ -106,6 +121,14 @@ const MessageInput = (
       ){
         setShowEmojiPicker(false)
       }
+
+      if (
+        attachmentMenuRef.current &&
+        !attachmentMenuRef.current.contains(event.target)
+      ) {
+        setShowAttachmentMenu(false)
+      }
+
     }
 
     document.addEventListener("mousedown",handleClickOutside)
@@ -115,6 +138,66 @@ const MessageInput = (
     }
 
   },[])
+
+  const handleAttachmentSelect = (type)=>{
+
+    setShowAttachmentMenu(false)
+
+    switch(type){
+      
+      case "IMAGE":
+        imageInputRef.current.click()
+        break
+
+      case "VIDEO":
+        videoInputRef.current.click()
+        break
+
+      case "FILE":
+        documentInputRef.current.click()
+        break
+
+      case "AUDIO":
+        audioInputRef.current.click()
+        break
+
+      default:
+        break
+
+    }
+
+  }
+
+  const handleImageUpload = async (e)=>{
+
+    const file = e.target.files[0]
+
+    if(!file || !selectedConversation) return
+
+    console.log(file)
+
+    try{
+
+      const uploadResponse = await uploadImage(file)
+
+      console.log(uploadResponse)
+      
+      sendSocketMessage({
+        receiverId:selectedConversation.userId,
+        content:null,
+        messageType:"IMAGE",
+        attachmentUrl:uploadResponse.attachmentUrl,
+        attachmentName:uploadResponse.attachmentName,
+        attachmentSize:uploadResponse.attachmentSize
+      })
+
+      await fetchConversations()
+      e.target.value=""
+
+    }catch(error){
+      console.log(error)
+    }
+  }
 
   return (
     <div className="
@@ -156,6 +239,8 @@ const MessageInput = (
           )
         }
 
+        
+
         <input
           value={content}
           onChange={handleChange}
@@ -178,6 +263,26 @@ const MessageInput = (
         />
 
         <button
+          type='button'
+          onClick={()=>setShowAttachmentMenu(prev=> !prev)}
+          className='p-3 bg-slate-900 hover:bg-slate-700 rounded-xl transition'
+        >
+          <Paperclip 
+            size={22}
+          />
+        </button>
+          
+          {
+            showAttachmentMenu && (
+              <div ref={attachmentMenuRef}>
+                <AttachmentMenu
+                  onSelect={handleAttachmentSelect}
+                />
+              </div>
+            )
+          }
+
+        <button
         onClick={handelSend}
           className="bg-blue-600 px-6 rounded-xl hover:bg-blue-500"
         >
@@ -185,6 +290,35 @@ const MessageInput = (
         </button>
 
       </div>
+
+      <input 
+        ref={imageInputRef}
+        onChange={handleImageUpload}
+        type='file'
+        accept='image/*'
+        hidden
+      />
+
+      <input 
+        ref={documentInputRef}
+        type='file'
+        accept='.pdf,.doc,.txt,.docx'
+        hidden
+      />
+
+      <input 
+        ref={audioInputRef}
+        type='file'
+        accept='audio/*'
+        hidden
+      />
+
+      <input 
+        ref={videoInputRef}
+        type='file'
+        accept='video/*'
+        hidden
+      />
 
     </div>
   )
