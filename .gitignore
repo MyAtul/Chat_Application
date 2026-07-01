@@ -1,8 +1,11 @@
 # Backend
 Backend/chatapp/target/
 
+# Uploaded files
+Backend/chatapp/uploads/
+
 # Frontend
-Frontend/node_modules/
+Frontend/node_modules/git
 Frontend/dist/
 
 # IDE

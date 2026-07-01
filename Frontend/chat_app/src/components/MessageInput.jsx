@@ -4,7 +4,26 @@ import { sendSocketMessage, sendTyping } from '../websockets/socket'
 import { Paperclip, Smile } from 'lucide-react'
 import EmojiPicker from "emoji-picker-react";
 import AttachmentMenu from './AttachmentMenu';
-import { uploadImage } from '../services/uploadService';
+import { uploadAudio, uploadDocument, uploadImage, uploadVideo } from '../services/uploadService';
+
+const ATTACHMENT_CONFIG = {
+    IMAGE: {
+        upload: uploadImage,
+        messageType: "IMAGE"
+    },
+    FILE: {
+        upload: uploadDocument,
+        messageType: "FILE"
+    },
+    VIDEO: {
+        upload: uploadVideo,
+        messageType: "VIDEO"
+    },
+    AUDIO: {
+        upload: uploadAudio,
+        messageType: "AUDIO"
+    }
+}
 
 const MessageInput = (
   {
@@ -17,6 +36,7 @@ const MessageInput = (
   const [content, setContent] = useState('')
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const [showAttachmentMenu, setShowAttachmentMenu] = useState(false)
+  const [selectedAttachmentType, setSelectedAttachmentType] = useState(null)
 
   const typingTimeout =  useRef(null)
   const isTyping = useRef(false)
@@ -141,6 +161,7 @@ const MessageInput = (
 
   const handleAttachmentSelect = (type)=>{
 
+    setSelectedAttachmentType(type)
     setShowAttachmentMenu(false)
 
     switch(type){
@@ -168,36 +189,56 @@ const MessageInput = (
 
   }
 
-  const handleImageUpload = async (e)=>{
+
+  const handleFileUpload = async (e) => {
 
     const file = e.target.files[0]
 
-    if(!file || !selectedConversation) return
+    if(!file || !selectedConversation)
+        return
 
-    console.log(file)
+    const config = ATTACHMENT_CONFIG[selectedAttachmentType]
+
+
+    if(!config){
+      e.target.value=""
+      return
+    }
 
     try{
 
-      const uploadResponse = await uploadImage(file)
+      const uploadResponse = await config.upload(file)
 
-      console.log(uploadResponse)
-      
-      sendSocketMessage({
-        receiverId:selectedConversation.userId,
-        content:null,
-        messageType:"IMAGE",
-        attachmentUrl:uploadResponse.attachmentUrl,
-        attachmentName:uploadResponse.attachmentName,
-        attachmentSize:uploadResponse.attachmentSize
-      })
+
+        sendSocketMessage({
+
+          receiverId:selectedConversation.userId,
+
+          content:null,
+
+          messageType:config.messageType,
+
+          attachmentUrl:uploadResponse.attachmentUrl,
+
+          attachmentName:uploadResponse.attachmentName,
+
+          attachmentSize:uploadResponse.attachmentSize
+
+        })
 
       await fetchConversations()
-      e.target.value=""
+      setSelectedAttachmentType(null)
+
+      e.target.value = ""
 
     }catch(error){
+
       console.log(error)
+
     }
+
   }
+
 
   return (
     <div className="
@@ -293,7 +334,7 @@ const MessageInput = (
 
       <input 
         ref={imageInputRef}
-        onChange={handleImageUpload}
+        onChange={handleFileUpload}
         type='file'
         accept='image/*'
         hidden
@@ -301,6 +342,7 @@ const MessageInput = (
 
       <input 
         ref={documentInputRef}
+        onChange={handleFileUpload}
         type='file'
         accept='.pdf,.doc,.txt,.docx'
         hidden
@@ -308,6 +350,7 @@ const MessageInput = (
 
       <input 
         ref={audioInputRef}
+        onChange={handleFileUpload}
         type='file'
         accept='audio/*'
         hidden
@@ -315,6 +358,7 @@ const MessageInput = (
 
       <input 
         ref={videoInputRef}
+        onChange={handleFileUpload}
         type='file'
         accept='video/*'
         hidden

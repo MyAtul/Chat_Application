@@ -12,7 +12,6 @@ const MessageList = ({messages,currentUserId}) => {
         })
 
     }, [messages])
-    console.log(messages);
 
   return (
     <div className='flex-1 overflow-y-auto p-6'>

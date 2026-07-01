@@ -19,10 +19,26 @@ public class UploadController {
     private UploadService uploadService;
 
     @PostMapping("/image")
-    public UploadResponse uploadImage(
-            @RequestParam("file") MultipartFile file
-    )throws IOException{
-        System.out.println("in Image upload");
+    public UploadResponse uploadImage(@RequestParam("file") MultipartFile file)throws IOException
+    {
         return uploadService.uploadImage(file);
+    }
+
+    @PostMapping("/document")
+    public UploadResponse uploadDocument(@RequestParam("file") MultipartFile file)throws IOException
+    {
+        return uploadService.uploadDocument(file);
+    }
+
+    @PostMapping("/video")
+    public UploadResponse uploadVideo(@RequestParam("file") MultipartFile file)throws IOException
+    {
+        return uploadService.uploadVideo(file);
+    }
+
+    @PostMapping("/audio")
+    public UploadResponse uploadAudio(@RequestParam("file") MultipartFile file)throws IOException
+    {
+        return uploadService.uploadAudio(file);
     }
 }

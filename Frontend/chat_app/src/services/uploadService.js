@@ -1,13 +1,13 @@
 import api from "./api"
 
-export const uploadImage = async (file)=>{
+const upload = async (file,endpoint)=>{
 
     const formData = new FormData()
 
     formData.append("file",file)
 
     const response = await api.post(
-        "/upload/image",
+        `/upload/${endpoint}`,
         formData,
         {
             headers:{
@@ -17,3 +17,11 @@ export const uploadImage = async (file)=>{
     )
     return response.data
 }
+
+export const uploadImage = (file)=> upload(file,"image")
+
+export const uploadDocument = (file)=> upload(file,"document")
+
+export const uploadAudio = (file)=> upload(file,"audio")
+
+export const uploadVideo = (file)=> upload(file,"video")

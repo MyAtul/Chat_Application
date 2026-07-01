@@ -58,8 +58,6 @@ public class ChatWebSocketController {
                            org.springframework.messaging.Message<?> msg)
     {
 
-        System.out.println("In marks as Read in webSocketController");
-
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(msg);
 
         String username = (String) accessor
@@ -70,9 +68,6 @@ public class ChatWebSocketController {
                 request.getSenderId(),
                 username
         );
-
-        messages.forEach(message->
-                System.out.println(message.getStatus()));
 
         messages.forEach(message -> {
                     messagingTemplate.convertAndSend(

@@ -54,7 +54,7 @@ const Chat = () => {
     try{
 
       const message = await getChatHistory(receiverId)
-      console.log(message);
+      
       setMessages(message)
 
     }catch(error){

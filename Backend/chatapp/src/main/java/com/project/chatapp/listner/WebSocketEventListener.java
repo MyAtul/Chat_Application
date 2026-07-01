@@ -38,9 +38,6 @@ public class WebSocketEventListener {
                         presenceService.getOnlineUsers()
                 );
 
-                System.out.println("User Offline "+userId);
-
-                System.out.println("online user "+presenceService.getOnlineUsers());
             }
         }
     }
